@@ -1,13 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import {
-  SatelliteDataset,
-  SatelliteObservationStatus,
-  SatelliteProvider,
-} from '../enums/satellite.enum';
+import { SatelliteDataset, SatelliteObservationStatus, SatelliteProvider } from '../enums/satellite.enum';
 
-export type SatelliteObservationDocument =
-  HydratedDocument<SatelliteObservation>;
+export type SatelliteObservationDocument = HydratedDocument<SatelliteObservation>;
+
+export interface SatelliteIndices {
+  ndvi?: number;
+  ndmi?: number;
+  ndwi?: number;
+  evi?: number;
+  savi?: number;
+}
 
 @Schema({ collection: 'satellite_observations', timestamps: true })
 export class SatelliteObservation {
@@ -33,7 +36,7 @@ export class SatelliteObservation {
   cloudPercentage?: number;
 
   @Prop({ required: true, type: Object, default: {} })
-  indices!: { ndvi?: number };
+  indices!: SatelliteIndices;
 
   @Prop({ required: true, type: Object, default: {} })
   metrics!: Record<string, unknown>;
@@ -48,7 +51,7 @@ export class SatelliteObservation {
   status!: SatelliteObservationStatus;
 }
 
-export const SatelliteObservationSchema =
-  SchemaFactory.createForClass(SatelliteObservation);
+export const SatelliteObservationSchema = SchemaFactory.createForClass(SatelliteObservation);
+
 SatelliteObservationSchema.index({ landId: 1, observationTime: -1 });
 SatelliteObservationSchema.index({ landId: 1, retrievedAt: -1 });

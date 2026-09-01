@@ -2,22 +2,25 @@ import * as Joi from 'joi';
 
 export const validationSchema = Joi.object({
   JWT_SECRET: Joi.string().required(),
-
   GOOGLE_CLIENT_ID: Joi.string().required(),
-
   DATABASE_URL: Joi.string(),
   MONGODB_URI: Joi.string(),
   GOOGLE_CLOUD_PROJECT_ID: Joi.string(),
   EARTH_ENGINE_PROJECT_ID: Joi.string(),
-  EARTH_ENGINE_CLIENT_EMAIL: Joi.string(),
-  EARTH_ENGINE_PRIVATE_KEY: Joi.string(),
-  EARTH_ENGINE_REFRESH_INTERVAL_SECONDS: Joi.number().default(900),
-  EARTH_ENGINE_REQUEST_TIMEOUT_MS: Joi.number().default(30000),
-  EARTH_ENGINE_MAX_RETRIES: Joi.number().default(3),
-  EARTH_ENGINE_MOCK_ENABLED: Joi.string()
-    .valid('true', 'false')
-    .default('false'),
-  LAND_MAX_VERTICES: Joi.number().default(100),
-  LAND_MIN_AREA_HECTARES: Joi.number(),
-  LAND_MAX_AREA_HECTARES: Joi.number(),
-}).or('DATABASE_URL', 'MONGODB_URI');
+  EARTH_ENGINE_REFRESH_INTERVAL_SECONDS: Joi.number().integer().positive().default(900),
+  EARTH_ENGINE_FAILURE_RETRY_SECONDS: Joi.number().integer().positive().default(60),
+  EARTH_ENGINE_REQUEST_TIMEOUT_MS: Joi.number().integer().positive().default(30000),
+  EARTH_ENGINE_MAX_RETRIES: Joi.number().integer().min(0).max(10).default(3),
+  EARTH_ENGINE_MOCK_ENABLED: Joi.string().valid('true', 'false').default('false'),
+  EARTH_ENGINE_LOOKBACK_DAYS: Joi.number().integer().positive().default(30),
+  EARTH_ENGINE_MAX_CLOUD_PERCENTAGE: Joi.number().min(0).max(100).default(30),
+  EARTH_ENGINE_FALLBACK_MAX_CLOUD_PERCENTAGE: Joi.number().min(0).max(100).default(80),
+  EARTH_ENGINE_MAX_CANDIDATE_IMAGES: Joi.number().integer().min(1).max(20).default(6),
+  EARTH_ENGINE_SCALE_METERS: Joi.number().positive().default(10),
+  EARTH_ENGINE_MAP_CACHE_SECONDS: Joi.number().integer().min(300).max(7200).default(3600),
+  LAND_MAX_VERTICES: Joi.number().integer().min(3).default(100),
+  LAND_MIN_AREA_HECTARES: Joi.number().positive(),
+  LAND_MAX_AREA_HECTARES: Joi.number().positive(),
+  EARTH_ENGINE_EXTENDED_LOOKBACK_DAYS: Joi.number().integer().min(31).max(365).default(90),
+  EARTH_ENGINE_MIN_CLEAR_COVERAGE_PERCENTAGE: Joi.number().min(1).max(100).default(60),
+}).or('DATABASE_URL', 'MONGODB_URI').or('GOOGLE_CLOUD_PROJECT_ID', 'EARTH_ENGINE_PROJECT_ID');

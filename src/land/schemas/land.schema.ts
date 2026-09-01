@@ -1,9 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import type {
-  PointGeometry,
-  PolygonGeometry,
-} from '../services/geojson.service';
+import { SatelliteObservationStatus } from '../enums/satellite.enum';
+import type { PointGeometry, PolygonGeometry } from '../services/geojson.service';
 
 export type LandDocument = HydratedDocument<Land>;
 
@@ -24,9 +22,16 @@ export class Land {
   @Prop()
   lastSatelliteQueryAt?: Date;
 
+  @Prop()
+  lastSatelliteAttemptAt?: Date;
+
+  @Prop({ enum: Object.values(SatelliteObservationStatus) })
+  lastSatelliteStatus?: SatelliteObservationStatus;
+
   @Prop({ required: true, index: true })
   nextSatelliteRefreshAt!: Date;
 }
 
 export const LandSchema = SchemaFactory.createForClass(Land);
+
 LandSchema.index({ geometry: '2dsphere' });
