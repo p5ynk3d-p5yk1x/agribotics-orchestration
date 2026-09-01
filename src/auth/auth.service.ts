@@ -7,7 +7,10 @@ import { User, UserDocument } from '../user/user.schema';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService, @InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+  ) {}
 
   async validateOAuthUser(data: any) {
     const { profile } = data;
@@ -22,23 +25,24 @@ export class AuthService {
 
     if (!user) {
       user = await this.userModel.create({
-          googleId: profile.id,
-          email,
-          name: profile.displayName
-        });
-      } else {
-          user.name = profile.displayName;
-          await user.save();
-      }
-      return user;
+        googleId: profile.id,
+        email,
+        name: profile.displayName,
+      });
+    } else {
+      user.name = profile.displayName;
+      await user.save();
     }
+    return user;
+  }
 
   generateJwt(user: any) {
     const payload = {
-        sub: user._id,
-        email: user.email,
+      sub: user._id,
+      email: user.email,
+      role: user.role,
     };
 
     return this.jwtService.sign(payload);
   }
-}   
+}
