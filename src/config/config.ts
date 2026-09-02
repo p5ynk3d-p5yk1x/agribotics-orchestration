@@ -30,4 +30,11 @@ export default () => ({
     minAreaHectares: process.env.LAND_MIN_AREA_HECTARES ? Number(process.env.LAND_MIN_AREA_HECTARES) : undefined,
     maxAreaHectares: process.env.LAND_MAX_AREA_HECTARES ? Number(process.env.LAND_MAX_AREA_HECTARES) : undefined,
   },
+  admin: {
+    email: process.env.DEFAULT_ADMIN_EMAIL,
+    password: process.env.DEFAULT_ADMIN_PASSWORD,
+  },
+  security: {
+    bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS ?? '12', 10),
+  },
 });

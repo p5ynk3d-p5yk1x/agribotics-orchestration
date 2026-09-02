@@ -23,4 +23,7 @@ export const validationSchema = Joi.object({
   LAND_MAX_AREA_HECTARES: Joi.number().positive(),
   EARTH_ENGINE_EXTENDED_LOOKBACK_DAYS: Joi.number().integer().min(31).max(365).default(90),
   EARTH_ENGINE_MIN_CLEAR_COVERAGE_PERCENTAGE: Joi.number().min(1).max(100).default(60),
+  DEFAULT_ADMIN_EMAIL: Joi.string().email().required(),
+  DEFAULT_ADMIN_PASSWORD: Joi.string().min(12).required(),
+  BCRYPT_SALT_ROUNDS: Joi.number().integer().min(10).max(15).default(12),
 }).or('DATABASE_URL', 'MONGODB_URI').or('GOOGLE_CLOUD_PROJECT_ID', 'EARTH_ENGINE_PROJECT_ID');

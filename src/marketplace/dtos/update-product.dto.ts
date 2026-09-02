@@ -10,6 +10,7 @@ import {
   Length,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ProductCategory } from '../enums/product-category.enum';
 
 export class UpdateProductDto {
@@ -34,6 +35,7 @@ export class UpdateProductDto {
   problemKeywords?: string[];
 
   @IsOptional()
+  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   price?: number;
@@ -46,8 +48,4 @@ export class UpdateProductDto {
   @IsOptional()
   @IsUrl({ require_protocol: true })
   affiliateUrl?: string;
-
-  @IsOptional()
-  @IsUrl({ require_protocol: true })
-  imageUrl?: string;
 }

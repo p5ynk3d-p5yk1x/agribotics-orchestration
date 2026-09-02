@@ -3,13 +3,12 @@ import {
   IsArray,
   IsEnum,
   IsNumber,
-  IsOptional,
   IsPositive,
   IsString,
-  IsUrl,
   Length,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ProductCategory } from '../enums/product-category.enum';
 
 export class CreateProductDto {
@@ -29,6 +28,7 @@ export class CreateProductDto {
   @IsString({ each: true })
   problemKeywords!: string[];
 
+  @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   price!: number;
@@ -37,10 +37,6 @@ export class CreateProductDto {
   @Length(3, 3)
   currency!: string;
 
-  @IsUrl({ require_protocol: true })
+  @IsString()
   affiliateUrl!: string;
-
-  @IsOptional()
-  @IsUrl({ require_protocol: true })
-  imageUrl?: string;
 }

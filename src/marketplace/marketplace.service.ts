@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model, QueryFilter } from 'mongoose';
 import { CreateProductDto } from './dtos/create-product.dto';
@@ -13,20 +9,23 @@ import { Product, ProductDocument } from './schemas/product.schema';
 
 @Injectable()
 export class MarketplaceService {
-  constructor(
-    @InjectModel(Product.name)
-    private readonly productModel: Model<ProductDocument>,
-  ) {}
+  constructor(@InjectModel(Product.name) private readonly productModel: Model<ProductDocument>) {}
 
-  create(dto: CreateProductDto) {
-    return this.productModel.create(this.normalize(dto));
+  create(dto: CreateProductDto, imageUrl?: string) {
+    return this.productModel.create({
+      ...this.normalize(dto),
+      ...(imageUrl && { imageUrl }),
+    });
   }
 
-  async update(id: string, dto: UpdateProductDto) {
+  async update(id: string, dto: UpdateProductDto, imageUrl?: string) {
     this.validateId(id);
     const product = await this.productModel.findByIdAndUpdate(
       id,
-      this.normalize(dto),
+      {
+        ...this.normalize(dto),
+        ...(imageUrl && { imageUrl }),
+      },
       { new: true, runValidators: true },
     );
     if (!product) throw new NotFoundException('Product not found');
@@ -60,21 +59,11 @@ export class MarketplaceService {
     return this.paginate({ problemKeywords: normalizedProblem }, pagination);
   }
 
-  private async paginate(
-    filter: QueryFilter<ProductDocument>,
-    { page, limit }: PaginationQueryDto,
-  ) {
+  private async paginate(filter: QueryFilter<ProductDocument>, { page, limit }: PaginationQueryDto) {
     const [items, total] = await Promise.all([
-      this.productModel
-        .find(filter)
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean()
-        .exec(),
+      this.productModel.find(filter).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean().exec(),
       this.productModel.countDocuments(filter).exec(),
     ]);
-
     return {
       items,
       pagination: {
@@ -90,18 +79,13 @@ export class MarketplaceService {
     return {
       ...dto,
       ...(dto.problemKeywords && {
-        problemKeywords: [
-          ...new Set(
-            dto.problemKeywords.map((keyword) => keyword.trim().toLowerCase()),
-          ),
-        ].filter(Boolean),
+        problemKeywords: [...new Set(dto.problemKeywords.map((keyword) => keyword.trim().toLowerCase()))].filter(Boolean),
       }),
       ...(dto.currency && { currency: dto.currency.toUpperCase() }),
     };
   }
 
   private validateId(id: string): void {
-    if (!isValidObjectId(id))
-      throw new BadRequestException('Invalid product id');
+    if (!isValidObjectId(id)) throw new BadRequestException('Invalid product id');
   }
 }
