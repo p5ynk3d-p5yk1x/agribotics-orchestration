@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { JobsModule } from './jobs/job.module';
 import { LandModule } from './land/land.module';
+import { MarketplaceModule } from './marketplace/marketplace.module';
 
 import config from './config/config';
 import { validationSchema } from './config/validation';
@@ -25,6 +26,7 @@ import { validationSchema } from './config/validation';
     AuthModule,
     JobsModule,
     LandModule,
+    MarketplaceModule,
   ],
   controllers: [],
   providers: [],

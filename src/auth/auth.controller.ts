@@ -1,15 +1,19 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
-import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
+import { AdminLoginDto } from './dto/admin-login.dto';
 
-
-@Controller('auth')
+@Controller('/api/auth')
 export class AuthController {
-  private client: OAuth2Client;
-  constructor(private authService: AuthService, private configService: ConfigService,) {
-        const clientId = this.configService.get<string>('google.clientId');
-        this.client = new OAuth2Client(clientId);
+  private readonly client: OAuth2Client;
+
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {
+    const clientId = this.configService.get<string>('google.clientId');
+    this.client = new OAuth2Client(clientId);
   }
 
   @Post('google/mobile')
@@ -38,5 +42,10 @@ export class AuthController {
     const token = this.authService.generateJwt(user);
 
     return { accessToken: token };
+  }
+
+  @Post('admin/login')
+  async adminLogin(@Body() dto: AdminLoginDto) {
+    return this.authService.loginAdmin(dto.email, dto.password);
   }
 }
