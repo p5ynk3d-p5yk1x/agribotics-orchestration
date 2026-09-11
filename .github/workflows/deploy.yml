@@ -19,8 +19,10 @@ jobs:
 
       - name: Deploy code
         run: |
-          rm -rf /home/ec2-user/apps/agribotics/*
+          rm -rf /home/ec2-user/apps/agribotics
+          mkdir -p /home/ec2-user/apps/agribotics
           cp -R . /home/ec2-user/apps/agribotics/
+          rm -rf /home/ec2-user/apps/agribotics/.git
 
       - name: Install dependencies
         working-directory: /home/ec2-user/apps/agribotics
