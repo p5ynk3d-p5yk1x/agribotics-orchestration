@@ -29,6 +29,17 @@ export class Product {
 
   @Prop({ trim: true })
   imageUrl?: string;
+
+  @Prop({
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+  })
+  productId!: string;
+
+  @Prop({type: String})
+  imageKey?: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

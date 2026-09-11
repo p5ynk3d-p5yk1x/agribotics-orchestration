@@ -9,6 +9,14 @@ export default () => ({
   database: {
     url: process.env.MONGODB_URI ?? process.env.DATABASE_URL,
   },
+  aws: {
+    region: process.env.AWS_REGION ?? 'ap-south-1',
+    s3: {
+      bucket: process.env.AWS_S3_UPLOAD_BUCKET,
+      jobsPrefix: process.env.AWS_S3_JOBS_PREFIX ?? 'jobs',
+      productsPrefix: process.env.AWS_S3_PRODUCTS_PREFIX ?? 'products',
+    },
+  },
   earthEngine: {
     projectId: process.env.EARTH_ENGINE_PROJECT_ID ?? process.env.GOOGLE_CLOUD_PROJECT_ID,
     refreshIntervalSeconds: Number(process.env.EARTH_ENGINE_REFRESH_INTERVAL_SECONDS ?? 900),

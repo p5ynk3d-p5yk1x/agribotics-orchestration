@@ -28,4 +28,10 @@ export class JobsConsumer implements OnModuleInit {
     console.log(JSON.stringify(event, null, 2));
     await this.jobsService.handleStatusUpdate(event);
   }
+
+  @EventPattern(KafkaTopics.SOIL_STATUS_UPDATED)
+  async handleSoilStatusUpdate(@Payload() event: jobStatusUpdatedEvent.JobStatusUpdatedEvent) {
+    this.logger.log(`SOIL result received. jobId=${event.jobId}`);
+    await this.jobsService.handleStatusUpdate(event);
+  }
 }

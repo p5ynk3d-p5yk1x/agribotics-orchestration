@@ -1,13 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 import { JobStatus } from '../enums/job-status.enum';
 import { JobType } from '../enums/job-type.enum';
-import { v4 as uuid } from 'uuid';
-
 
 export type JobDocument = HydratedDocument<Job>;
 
-@Schema({ collection: 'jobs', timestamps: true })
+@Schema({ collection: 'jobs',timestamps: true })
 export class Job {
   @Prop({
     required: true,
@@ -17,7 +16,7 @@ export class Job {
   })
   jobId!: string;
 
-  @Prop({ required: true, index: true })
+  @Prop({ required: true,index: true })
   userId!: string;
 
   @Prop({
@@ -33,8 +32,8 @@ export class Job {
   })
   status!: JobStatus;
 
-  @Prop({ required: true })
-  imagePath!: string;
+  @Prop()
+  imagePath?: string;
 
   @Prop()
   failureReason?: string;
