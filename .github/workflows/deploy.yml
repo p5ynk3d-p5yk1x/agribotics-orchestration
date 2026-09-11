@@ -1,0 +1,31 @@
+name: Deploy NestJS Backend
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy application
+        run: |
+          rm -rf /home/ec2-user/apps/agribotics/*
+          cp -R . /home/ec2-user/apps/agribotics/
+
+      - name: Install dependencies
+        working-directory: /home/ec2-user/apps/agribotics
+        run: npm ci
+
+      - name: Build
+        working-directory: /home/ec2-user/apps/agribotics
+        run: npm run build
