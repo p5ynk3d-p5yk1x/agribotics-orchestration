@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy application
+      - name: Deploy code
         run: |
           rm -rf /home/ec2-user/apps/agribotics/*
           cp -R . /home/ec2-user/apps/agribotics/
@@ -29,3 +29,35 @@ jobs:
       - name: Build
         working-directory: /home/ec2-user/apps/agribotics
         run: npm run build
+
+      - name: Configure environment
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLOUD_PROJECT_ID: ${ secrets.GOOGLE_CLOUD_PROJECT_ID}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_UPLOAD_BUCKET: ${{ secrets.AWS_S3_UPLOAD_BUCKET }}
+          EARTH_ENGINE_PROJECT_ID: ${{ secrets.EARTH_ENGINE_PROJECT_ID }}
+          DEFAULT_ADMIN_EMAIL: ${{ secrets.DEFAULT_ADMIN_EMAIL }}
+          DEFAULT_ADMIN_PASSWORD: ${{ secrets.DEFAULT_ADMIN_PASSWORD }}
+        run: |
+          sudo tee /etc/agribotics/agribotics.env > /dev/null <<EOF
+          JWT_SECRET=${JWT_SECRET}
+          GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+          GOOGLE_CLOUD_PROJECT_ID: ${GOOGLE_CLOUD_PROJECT_ID}
+          MONGODB_URI=${MONGODB_URI}
+          AWS_REGION=${AWS_REGION}
+          AWS_S3_UPLOAD_BUCKET=${AWS_S3_UPLOAD_BUCKET}
+          EARTH_ENGINE_PROJECT_ID=${EARTH_ENGINE_PROJECT_ID}
+          DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
+          DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
+          EOF
+
+          sudo chmod 600 /etc/agribotics/agribotics.env
+
+      - name: Restart NestJS
+        run: sudo systemctl restart agribotics
+
+      - name: Verify deployment
+        run: systemctl is-active --quiet agribotics
