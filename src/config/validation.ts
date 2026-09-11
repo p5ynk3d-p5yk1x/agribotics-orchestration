@@ -5,7 +5,6 @@ export const validationSchema = Joi.object({
   GOOGLE_CLIENT_ID: Joi.string().required(),
   DATABASE_URL: Joi.string(),
   KAFKA_BROKER: Joi.string().required(),
-  MONGODB_URI: Joi.string(),
   AWS_REGION: Joi.string().default('ap-south-1'),
   AWS_S3_UPLOAD_BUCKET: Joi.string().required(),
   AWS_S3_JOBS_PREFIX: Joi.string().default('jobs'),
@@ -31,4 +30,4 @@ export const validationSchema = Joi.object({
   DEFAULT_ADMIN_EMAIL: Joi.string().email().required(),
   DEFAULT_ADMIN_PASSWORD: Joi.string().min(8).required(),
   BCRYPT_SALT_ROUNDS: Joi.number().integer().min(10).max(15).default(12),
-}).or('DATABASE_URL', 'MONGODB_URI').or('GOOGLE_CLOUD_PROJECT_ID', 'EARTH_ENGINE_PROJECT_ID');
+}).or('GOOGLE_CLOUD_PROJECT_ID', 'EARTH_ENGINE_PROJECT_ID');

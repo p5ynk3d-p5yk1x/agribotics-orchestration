@@ -7,7 +7,7 @@ export default () => ({
     clientId: process.env.GOOGLE_CLIENT_ID,
   },
   database: {
-    url: process.env.MONGODB_URI ?? process.env.DATABASE_URL,
+    url: process.env.DATABASE_URL,
   },
   kafka: {
     broker: process.env.KAFKA_BROKER,
