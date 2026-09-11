@@ -35,8 +35,8 @@ export default () => ({
   },
   land: {
     maxVertices: Number(process.env.LAND_MAX_VERTICES ?? 100),
-    minAreaHectares: process.env.LAND_MIN_AREA_HECTARES ? Number(process.env.LAND_MIN_AREA_HECTARES) : undefined,
-    maxAreaHectares: process.env.LAND_MAX_AREA_HECTARES ? Number(process.env.LAND_MAX_AREA_HECTARES) : undefined,
+    minAreaHectares: process.env.LAND_MIN_AREA_HECTARES ? Number(process.env.LAND_MIN_AREA_HECTARES) : 1,
+    maxAreaHectares: process.env.LAND_MAX_AREA_HECTARES ? Number(process.env.LAND_MAX_AREA_HECTARES) : 10,
   },
   admin: {
     email: process.env.DEFAULT_ADMIN_EMAIL,
