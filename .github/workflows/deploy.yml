@@ -36,13 +36,14 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLOUD_PROJECT_ID: ${ secrets.GOOGLE_CLOUD_PROJECT_ID}
+          GOOGLE_CLOUD_PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_S3_UPLOAD_BUCKET: ${{ secrets.AWS_S3_UPLOAD_BUCKET }}
           EARTH_ENGINE_PROJECT_ID: ${{ secrets.EARTH_ENGINE_PROJECT_ID }}
           DEFAULT_ADMIN_EMAIL: ${{ secrets.DEFAULT_ADMIN_EMAIL }}
           DEFAULT_ADMIN_PASSWORD: ${{ secrets.DEFAULT_ADMIN_PASSWORD }}
+          KAFKA_BROKER: ${{ secrets.KAFKA_BROKER}}
         run: |
           sudo tee /etc/agribotics/agribotics.env > /dev/null <<EOF
           JWT_SECRET=${JWT_SECRET}
@@ -54,6 +55,7 @@ jobs:
           EARTH_ENGINE_PROJECT_ID=${EARTH_ENGINE_PROJECT_ID}
           DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
           DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
+          KAFKA_BROKER: ${KAFKA_BROKER}
           EOF
 
           sudo chmod 600 /etc/agribotics/agribotics.env
