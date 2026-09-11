@@ -9,6 +9,9 @@ export default () => ({
   database: {
     url: process.env.MONGODB_URI ?? process.env.DATABASE_URL,
   },
+  kafka: {
+    broker: process.env.KAFKA_BROKER,
+  },
   aws: {
     region: process.env.AWS_REGION ?? 'ap-south-1',
     s3: {

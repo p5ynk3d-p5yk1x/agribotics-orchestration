@@ -1,24 +1,32 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'agribotics-orchestrator',
-            brokers: ['localhost:9092']
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: 'agribotics-orchestrator',
+              brokers: [
+                configService.get<string>('kafka.broker')!,
+              ],
+            },
+            consumer: {
+              groupId: 'weed-inference-group',
+            },
           },
-          consumer: {
-            groupId: 'weed-inference-group'
-          }
-        }
-      }
-    ])
+        }),
+      },
+    ]),
   ],
-  exports: [ClientsModule]
+
+  exports: [ClientsModule],
 })
 export class KafkaModule {}
